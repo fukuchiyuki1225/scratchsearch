@@ -9,7 +9,7 @@ canvasDom.width = 482;
 canvasDom.height = 362;
 
 ctx.lineCap = 'round';
-ctx.strokeStyle = 'lightskyblue';
+ctx.strokeDtyle = 'lightskyblue';
 ctx.lineWidth = '20px';
 
 canvas.mousemove(function () {
