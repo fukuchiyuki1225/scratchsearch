@@ -3,23 +3,26 @@
 const canvas = $('#canvas');
 const canvasDom = canvas[0];
 const ctx = canvasDom.getContext('2d');
+let drawingFlag = false;
 
 canvasDom.width = 482;
 canvasDom.height = 362;
 
-let drawingFlag = false;
+ctx.lineCap = 'round';
+ctx.strokeStyle = 'lightskyblue';
+ctx.lineWidth = '20px';
 
 canvas.mousemove(function () {
-  if (!drawingFlag) return;
   console.log('drawing');
+  if (!drawingFlag) return;
 });
 
 canvas.mousedown(function () {
-  drawingFlag = true;
   console.log('mousedown');
+  drawingFlag = true;
 });
 
 canvas.mouseup(function () {
-  drawingFlag = false;
   console.log('mouseup');
+  drawingFlag = false;
 });
