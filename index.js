@@ -17,7 +17,6 @@ ctx.strokeStyle = 'lightskyblue';
 ctx.lineWidth = 20;
 
 canvas.mousemove(function (e) {
-  console.log('drawing');
   if (!drawingFlag) return;
   const x = e.clientX - offsetX;
   const y = e.clientY - offsetY;
@@ -31,7 +30,6 @@ canvas.mousemove(function (e) {
 });
 
 canvas.mousedown(function (e) {
-  console.log('mousedown');
   ctx.clearRect(0, 0, canvasDom.width, canvasDom.height);
   drawingFlag = true;
   startX = e.clientX - offsetX;
@@ -39,6 +37,5 @@ canvas.mousedown(function (e) {
 });
 
 canvas.mouseup(function () {
-  console.log('mouseup');
   drawingFlag = false;
 });
