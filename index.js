@@ -12,6 +12,8 @@ let x = 0;
 let y = 0;
 let recordFlag = false;
 let recordTimer;
+let inputX = [];
+let inputY = [];
 
 canvasDom.width = 482;
 canvasDom.height = 362;
@@ -35,6 +37,8 @@ canvas.mousedown(function (e) {
   drawFlag = true;
   startX = e.clientX - offsetX;
   startY = e.clientY - offsetY;
+  inputX = [];
+  inputY = [];
 });
 
 canvas.mouseup(function () {
@@ -42,6 +46,7 @@ canvas.mouseup(function () {
   recordFlag = false;
   clearInterval(recordTimer);
   console.log(inputX);
+  console.log(inputY);
 });
 
 function drawPath(endX, endY) {
@@ -53,9 +58,6 @@ function drawPath(endX, endY) {
   startX = endX;
   startY = endY;
 }
-
-let inputX = [];
-let inputY = [];
 
 let recordCoordinate = function () {
   console.log('record');
