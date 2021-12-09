@@ -23,6 +23,7 @@ def calculateDtw(inputX, inputY, threshold, splittedDataPath, savePath):
         inputData.append(inputY[i])    
     inputData = np.array(inputData)
     inputData = inputData.reshape(len(inputX), 2)
+    inputData = TimeSeriesScalerMinMax().fit_transform(to_time_series_dataset([inputData])).flatten().reshape(-1, 2)
         
     # 1動作のcsvを読み込み，配列に保持（配列のインデックス=動作番号）
     splittedData = []
