@@ -33,9 +33,6 @@ def calculateDtw(inputX, inputY, threshold, splittedDataPath, savePath):
             
         # データの正規化(0~1)
         splittedData[i] = TimeSeriesScalerMinMax().fit_transform(to_time_series_dataset([splittedData[i]])).flatten().reshape(-1, 2)
-
-    # count = 0
-    # start = time.time()
    
     # 各動作ごとにDTW距離を算出
     dtwResults = pd.DataFrame(columns=["prjId", "moveNum", "dtw"])   
@@ -119,6 +116,6 @@ def get_min(m0, m1, m2, i, j):
         else:
             return i - 1, j - 1, m2
 
-x = [49, 50, 152, 316, 371, 395, 391, 271, 183, 121]
-y = [162, 300, 308, 319, 311, 174, 83, 71, 60, 62]
+x = [105, 205, 317, 408]
+y = [107, 203, 299, 356]
 calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch/splitted", "/Users/yuki-f/scratchsearch")
