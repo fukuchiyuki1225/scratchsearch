@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 from tslearn.preprocessing import TimeSeriesScalerMinMax
 from tslearn.utils import to_time_series_dataset
-import itertools
-import time
 
 # 入力と各動作のDTW距離を算出
 def calculateDtw(inputX, inputY, threshold, splittedDataPath, savePath):
