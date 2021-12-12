@@ -4,16 +4,27 @@ import numpy as np
 from tslearn.preprocessing import TimeSeriesScalerMinMax
 from tslearn.utils import to_time_series_dataset
 
-from flask import Flask, jsonify, abort, make_response, render_template, request
+from flask import Flask, json, jsonify, abort, make_response, render_template, request
 from flask_cors import CORS
 
 api = Flask(__name__)
 CORS(api)
 
+x = []
+y = []
+
 @api.route("/post", methods=["POST"])
 def post():
-    result = request.form["data"]
-    return make_response(result)
+    result = request.form["data"].lstrip("[").rstrip("]").split(",")
+    resultLen = len(result)
+    for i in range(resultLen):
+        if (i < resultLen / 2):
+            x.append(result[i])
+        else:
+            y.append(result[i])
+    print(x)
+    print(y)
+    return make_response("post response")
 
 @api.route("/get", methods=["GET"])
 def get():
