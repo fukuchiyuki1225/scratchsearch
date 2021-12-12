@@ -4,6 +4,22 @@ import numpy as np
 from tslearn.preprocessing import TimeSeriesScalerMinMax
 from tslearn.utils import to_time_series_dataset
 
+from flask import Flask, jsonify, abort, make_response, render_template, request
+from flask_cors import CORS
+
+api = Flask(__name__)
+CORS(api)
+
+@api.route("/post", methods=["POST"])
+def post():
+    result = request.form["data"]
+    return make_response(result)
+
+@api.route("/get", methods=["GET"])
+def get():
+    result = "test"
+    return result
+
 # 入力と各動作のDTW距離を算出
 def calculateDtw(inputX, inputY, threshold, splittedDataPath, savePath):
     # 検索対象ファイルの数確認
@@ -115,6 +131,8 @@ def get_min(m0, m1, m2, i, j):
         else:
             return i - 1, j - 1, m2
 
-x = [105, 205, 317, 408]
-y = [107, 203, 299, 356]
-calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch/splitted", "/Users/yuki-f/scratchsearch")
+# x = [105, 205, 317, 408]
+# y = [107, 203, 299, 356]
+# calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch/splitted", "/Users/yuki-f/scratchsearch")
+
+api.run(host="0.0.0.0", port=5000, debug=True)

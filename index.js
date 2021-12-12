@@ -21,8 +21,10 @@ ctx.lineCap = 'round';
 ctx.strokeStyle = 'lightskyblue';
 ctx.lineWidth = 20;
 
+const url = 'http://192.168.3.15:5000';
+
 $('#search').click(function () {
-  postFunc();
+  postFunc(url + '/post', url + '/get');
 });
 
 canvas.mousemove(function (e) {
@@ -69,10 +71,22 @@ let recordCoordinate = function () {
   inputY.push(Math.round(y));
 };
 
-function postFunc() {
+function postFunc(postUrl, getUrl) {
   if (!inputX.length | !inputY.length) return;
   let postData = inputX.concat(inputY);
   console.log(postData);
   let formData = new FormData();
   formData.append('data', JSON.stringify(postData));
+  fetch(postUrl, {
+    method: 'POST',
+    body: formData,
+  }).then(function () {
+    getFunc(getUrl);
+  });
+}
+
+function getFunc(getUrl) {
+  fetch(getUrl).then(function (response) {
+    console.log('test ok');
+  });
 }
