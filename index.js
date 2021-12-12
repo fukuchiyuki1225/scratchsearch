@@ -14,6 +14,7 @@ let recordFlag = false;
 let recordTimer;
 let inputX = [];
 let inputY = [];
+const resultEl = $('#result');
 
 canvasDom.width = 482;
 canvasDom.height = 362;
@@ -51,8 +52,6 @@ canvas.mouseup(function () {
   drawFlag = false;
   recordFlag = false;
   clearInterval(recordTimer);
-  console.log(inputX);
-  console.log(inputY);
 });
 
 function drawPath(endX, endY) {
@@ -66,7 +65,6 @@ function drawPath(endX, endY) {
 }
 
 let recordCoordinate = function () {
-  console.log('record');
   inputX.push(Math.round(x));
   inputY.push(Math.round(y));
 };
@@ -74,19 +72,24 @@ let recordCoordinate = function () {
 function postFunc(postUrl, getUrl) {
   if (!inputX.length | !inputY.length) return;
   let postData = inputX.concat(inputY);
-  console.log(postData);
   let formData = new FormData();
   formData.append('data', JSON.stringify(postData));
   fetch(postUrl, {
     method: 'POST',
     body: formData,
   }).then(function () {
+    resultEl.html(`<h3>検索中...</h3>`);
     getFunc(getUrl);
   });
 }
 
 function getFunc(getUrl) {
-  fetch(getUrl).then(function (response) {
-    // console.log(response);
-  });
+  fetch(getUrl)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (json) {
+      resultEl.html(json);
+      console.log(json);
+    });
 }
