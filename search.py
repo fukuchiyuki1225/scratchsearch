@@ -4,7 +4,7 @@ import numpy as np
 from tslearn.preprocessing import TimeSeriesScalerMinMax
 from tslearn.utils import to_time_series_dataset
 
-from flask import Flask, json, jsonify, abort, make_response, render_template, request
+from flask import Flask, make_response, request
 from flask_cors import CORS
 
 api = Flask(__name__)
@@ -26,15 +26,14 @@ def post():
             x.append(result[i])
         else:
             y.append(result[i])
-    # print(x)
-    # print(y)
     return make_response("post response")
 
 @api.route("/get", methods=["GET"])
 def get():
     result = calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch")
-    print(result)
-    return result.to_json(orient='split')
+    # print(result.to_json(orient="split"))
+    # return result.to_json(orient='split')
+    return result
 
 # 検索データセットの読み込み
 def loadDataset(splittedDataPath):
@@ -86,8 +85,8 @@ def calculateDtw(inputX, inputY, threshold, savePath):
         dtwResults = dtwResults.append(addRow)
 
     dtwResults = dtwResults.sort_values("dtw")
-    dtwResults.to_csv(savePath + "/results.csv")
-    return dtwResults
+    # dtwResults.to_csv(savePath + "/results.csv")
+    return dtwResults.to_json(orient="split")
 
 # DTW距離を算出
 def dtw(x, y):
