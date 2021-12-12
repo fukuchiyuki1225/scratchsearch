@@ -21,6 +21,10 @@ ctx.lineCap = 'round';
 ctx.strokeStyle = 'lightskyblue';
 ctx.lineWidth = 20;
 
+$('#search').click(function () {
+  postFunc();
+});
+
 canvas.mousemove(function (e) {
   if (!drawFlag) return;
   x = e.clientX - offsetX;
@@ -61,6 +65,14 @@ function drawPath(endX, endY) {
 
 let recordCoordinate = function () {
   console.log('record');
-  inputX.push(x);
-  inputY.push(y);
+  inputX.push(Math.round(x));
+  inputY.push(Math.round(y));
 };
+
+function postFunc() {
+  if (!inputX.length | !inputY.length) return;
+  let postData = inputX.concat(inputY);
+  console.log(postData);
+  let formData = new FormData();
+  formData.append('data', JSON.stringify(postData));
+}
