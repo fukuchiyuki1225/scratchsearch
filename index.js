@@ -87,6 +87,6 @@ function postFunc(postUrl, getUrl) {
 
 function getFunc(getUrl) {
   fetch(getUrl).then(function (response) {
-    console.log('test ok');
+    // console.log(response);
   });
 }

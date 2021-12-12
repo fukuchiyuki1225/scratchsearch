@@ -10,6 +10,10 @@ from flask_cors import CORS
 api = Flask(__name__)
 CORS(api)
 
+splittedData = []
+prjIds = []
+sprites = []
+nomalizedData = []
 x = []
 y = []
 
@@ -22,25 +26,49 @@ def post():
             x.append(result[i])
         else:
             y.append(result[i])
-    print(x)
-    print(y)
+    # print(x)
+    # print(y)
     return make_response("post response")
 
 @api.route("/get", methods=["GET"])
 def get():
-    result = "test"
-    return result
+    result = calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch")
+    print(result)
+    return result.to_json(orient='split')
 
-# 入力と各動作のDTW距離を算出
-def calculateDtw(inputX, inputY, threshold, splittedDataPath, savePath):
-    # 検索対象ファイルの数確認
+# 検索データセットの読み込み
+def loadDataset(splittedDataPath):
+    print("loading dataset")
+
     fileLen = 0
+
+    # 検索対象ファイルの数確認
     for pathName, dirName, fileNames in os.walk(splittedDataPath):
         fileLen = len(fileNames)
         for fileName in fileNames:
             if fileName.startswith("."):
                 fileLen -= 1
+    
 
+    # 1動作のcsvを読み込み，配列に保持（配列のインデックス=動作番号）
+    for i in range(fileLen):
+        data = pd.read_csv(splittedDataPath + "/" + str(i) + ".csv")
+        splittedData.insert(i, data[["x", "y"]].values)
+        prjIds.insert(i, data["prjId"].values[0])
+        sprites.insert(i, data["sprite"].values[0])
+        
+        # splittedData.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["x", "y"]).values)
+        # prjIds.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["prjId"]).values[0])
+        # sprites.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["sprite"]).values[0])
+            
+        # データの正規化(0~1)
+        nomalizedData.insert(i, TimeSeriesScalerMinMax().fit_transform(to_time_series_dataset([splittedData[i]])).flatten().reshape(-1, 2))
+
+    print("loaded dataset")
+    
+
+# 入力と各動作のDTW距離を算出
+def calculateDtw(inputX, inputY, threshold, savePath):
     # 入力の整形
     inputData = []
     for i in range(len(inputX)):
@@ -49,25 +77,17 @@ def calculateDtw(inputX, inputY, threshold, splittedDataPath, savePath):
     inputData = np.array(inputData)
     inputData = inputData.reshape(len(inputX), 2)
     inputData = TimeSeriesScalerMinMax().fit_transform(to_time_series_dataset([inputData])).flatten().reshape(-1, 2)
-        
-    # 1動作のcsvを読み込み，配列に保持（配列のインデックス=動作番号）
-    splittedData = []
-    prjIds = []
-    for i in range(fileLen):
-        splittedData.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["x", "y"]).values)
-        prjIds.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["prjId"]).values[0])
-            
-        # データの正規化(0~1)
-        splittedData[i] = TimeSeriesScalerMinMax().fit_transform(to_time_series_dataset([splittedData[i]])).flatten().reshape(-1, 2)
-   
+       
     # 各動作ごとにDTW距離を算出
-    dtwResults = pd.DataFrame(columns=["prjId", "moveNum", "dtw"])   
-    for i in range(fileLen):
-        dtwVal = dtw(inputData, splittedData[i])[1]
-        addRow = pd.DataFrame([[str(prjIds[i]), str(i), dtwVal]], columns=["prjId", "moveNum", "dtw"])
+    dtwResults = pd.DataFrame(columns=["moveNum", "prjId", "sprite", "dtw"])   
+    for i in range(len(splittedData)):
+        dtwVal = dtw(inputData, nomalizedData[i])[1]
+        addRow = pd.DataFrame([[str(i), str(prjIds[i]), sprites[i], dtwVal]], columns=["moveNum", "prjId", "sprite", "dtw"])
         dtwResults = dtwResults.append(addRow)
 
-    dtwResults.sort_values("dtw").to_csv(savePath + "/results.csv")
+    dtwResults = dtwResults.sort_values("dtw")
+    dtwResults.to_csv(savePath + "/results.csv")
+    return dtwResults
 
 # DTW距離を算出
 def dtw(x, y):
@@ -142,8 +162,5 @@ def get_min(m0, m1, m2, i, j):
         else:
             return i - 1, j - 1, m2
 
-# x = [105, 205, 317, 408]
-# y = [107, 203, 299, 356]
-# calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch/splitted", "/Users/yuki-f/scratchsearch")
-
+loadDataset("/Users/yuki-f/scratchsearch/splitted")
 api.run(host="0.0.0.0", port=5000, debug=True)
