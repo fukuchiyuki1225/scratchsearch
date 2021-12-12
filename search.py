@@ -31,8 +31,6 @@ def post():
 @api.route("/get", methods=["GET"])
 def get():
     result = calculateDtw(x, y, 0, "/Users/yuki-f/scratchsearch")
-    # print(result.to_json(orient="split"))
-    # return result.to_json(orient='split')
     return result
 
 # 検索データセットの読み込み
@@ -55,11 +53,7 @@ def loadDataset(splittedDataPath):
         splittedData.insert(i, data[["x", "y"]].values)
         prjIds.insert(i, data["prjId"].values[0])
         sprites.insert(i, data["sprite"].values[0])
-        
-        # splittedData.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["x", "y"]).values)
-        # prjIds.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["prjId"]).values[0])
-        # sprites.insert(i, pd.read_csv(splittedDataPath + "/" + str(i) + ".csv", usecols=["sprite"]).values[0])
-            
+       
         # データの正規化(0~1)
         nomalizedData.insert(i, TimeSeriesScalerMinMax().fit_transform(to_time_series_dataset([splittedData[i]])).flatten().reshape(-1, 2))
 
