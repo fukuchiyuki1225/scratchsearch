@@ -19,6 +19,8 @@ y = []
 
 @api.route("/post", methods=["POST"])
 def post():
+    x = []
+    y = []
     result = request.form["data"].lstrip("[").rstrip("]").split(",")
     resultLen = len(result)
     for i in range(resultLen):
