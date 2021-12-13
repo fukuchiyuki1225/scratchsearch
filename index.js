@@ -22,7 +22,7 @@ ctx.lineCap = 'round';
 ctx.strokeStyle = 'lightskyblue';
 ctx.lineWidth = 20;
 
-const url = 'http://192.168.3.15:5000';
+const url = 'http://0.0.0.0:5000';
 
 $('#search').click(function () {
   postFunc(url + '/post', url + '/get');
