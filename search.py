@@ -80,7 +80,7 @@ def calculateDtw(inputX, inputY, threshold, savePath):
 
     dtwResults = dtwResults.sort_values("dtw")
     # dtwResults.to_csv(savePath + "/results.csv")
-    return dtwResults.to_json(orient="split")
+    return dtwResults.to_json(orient="records")
 
 # DTW距離を算出
 def dtw(x, y):
