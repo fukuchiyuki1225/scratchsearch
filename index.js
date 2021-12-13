@@ -14,6 +14,7 @@ let recordFlag = false;
 let recordTimer;
 let inputX = [];
 let inputY = [];
+const statusEl = $('#status');
 const resultEl = $('#result');
 
 canvasDom.width = 482;
@@ -78,7 +79,7 @@ function postFunc(postUrl, getUrl) {
     method: 'POST',
     body: formData,
   }).then(function () {
-    resultEl.html(`<h3>検索中...</h3>`);
+    statusEl.html(`<h3>検索中...</h3>`);
     getFunc(getUrl);
   });
 }
@@ -89,7 +90,23 @@ function getFunc(getUrl) {
       return response.json();
     })
     .then(function (json) {
-      resultEl.html(json);
-      console.log(json);
+      statusEl.html(`<h3>検索結果</h3>`);
+      let a = ``;
+      for (let i = 0; i < json.length; i++) {
+        a += `<div>
+        <hr>
+        <p>　${i + 1}</p>
+        <p>　URL:  
+          <a href="https://scratch.mit.edu/projects/${
+            json[i]['prjId']
+          }/" target="_blank" rel="noopener noreferrer">
+              https://scratch.mit.edu/projects/${json[i]['prjId']}/
+          </a>
+        </p> 
+        <p>　スプライト: ${json[i]['sprite']}</p>
+        <p>　DTW距離: ${json[i]['dtw']}</p> 
+        </div>`;
+      }
+      resultEl.html(a);
     });
 }
