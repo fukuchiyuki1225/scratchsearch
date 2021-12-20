@@ -80,6 +80,7 @@ function postFunc(postUrl, getUrl) {
     body: formData,
   }).then(function () {
     statusEl.html(`<h3>検索中...</h3>`);
+    resultEl.empty();
     getFunc(getUrl);
   });
 }
@@ -95,7 +96,13 @@ function getFunc(getUrl) {
       for (let i = 0; i < json.length; i++) {
         a += `<div>
         <hr>
-        <p>　${i + 1}</p>
+        <b>　${i + 1}</b>
+        <p>　動作番号:
+          <a href="file:///Users/yuki-f/scratchsearch/splitted/${
+            json[i]['moveNum']
+          }.csv">${json[i]['moveNum']}
+          </a>
+        </p>
         <p>　URL:  
           <a href="https://scratch.mit.edu/projects/${
             json[i]['prjId']
