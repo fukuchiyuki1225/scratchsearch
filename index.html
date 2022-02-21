@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
   <head>
-    <meta charest="utf-8" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,21 +14,32 @@
     <title>Scratchの作品検索</title>
   </head>
   <body>
-    <h1>Scratchの作品検索</h1>
-    <div>
-      <canvas id="canvas"></canvas>
+    <header class="header">Scratchの作品検索</header>
+    <div class="search-article">
+      <div>
+        <canvas id="canvas"></canvas>
+      </div>
+      <button class="search" id="search">検索</button>
     </div>
-    <div>
-      <button id="search" type="button">検索</button>
+    <div class="result-article">
+      <span class="result-header">検索結果</span>
+      <div class="beforesearch" id="beforesearch">
+        <img
+          src="./img/undraw_Good_team_re_j1kc.png"
+          height="200"
+        />検索したい動作を入力してください
+      </div>
+      <div class="searching hidden" id="searching">
+        <img src="./img/undraw_content_team_3epn.png" height="200" />検索中…
+      </div>
+      <div id="result"></div>
     </div>
-    <div id="status"></div>
-    <div id="result"></div>
-
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
-    <script src="index.js"></script>
   </body>
+
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"
+  ></script>
+  <script src="index.js"></script>
 </html>

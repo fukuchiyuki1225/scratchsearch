@@ -3,8 +3,6 @@
 const canvas = $('#canvas');
 const canvasDom = canvas[0];
 const ctx = canvasDom.getContext('2d');
-const offsetX = canvasDom.getBoundingClientRect().left;
-const offsetY = canvasDom.getBoundingClientRect().top;
 let drawFlag = false;
 let startX = 0;
 let startY = 0;
@@ -14,8 +12,9 @@ let recordFlag = false;
 let recordTimer;
 let inputX = [];
 let inputY = [];
-const statusEl = $('#status');
+const searching = $('#searching');
 const resultEl = $('#result');
+const beforesearch = $('#beforesearch');
 
 canvasDom.width = 482;
 canvasDom.height = 362;
@@ -31,8 +30,9 @@ $('#search').click(function () {
 
 canvas.mousemove(function (e) {
   if (!drawFlag) return;
-  x = e.clientX - offsetX;
-  y = e.clientY - offsetY;
+  let rect = e.target.getBoundingClientRect();
+  x = e.clientX - rect.left;
+  y = e.clientY - rect.top;
   drawPath(x, y);
   if (!recordFlag) {
     recordTimer = setInterval(recordCoordinate, 200);
@@ -43,8 +43,9 @@ canvas.mousemove(function (e) {
 canvas.mousedown(function (e) {
   ctx.clearRect(0, 0, canvasDom.width, canvasDom.height);
   drawFlag = true;
-  startX = e.clientX - offsetX;
-  startY = e.clientY - offsetY;
+  let rect = e.target.getBoundingClientRect();
+  startX = e.clientX - rect.left;
+  startY = e.clientY - rect.top;
   inputX = [];
   inputY = [];
 });
@@ -79,8 +80,9 @@ function postFunc(postUrl, getUrl) {
     method: 'POST',
     body: formData,
   }).then(function () {
-    statusEl.html(`<h3>検索中...</h3>`);
-    resultEl.empty();
+    resetResult();
+    beforesearch.addClass('hidden');
+    searching.removeClass('hidden');
     getFunc(getUrl);
   });
 }
@@ -91,29 +93,25 @@ function getFunc(getUrl) {
       return response.json();
     })
     .then(function (json) {
-      statusEl.html(`<h3>検索結果</h3>`);
-      let a = ``;
-      for (let i = 0; i < json.length; i++) {
-        a += `<div>
-        <hr>
-        <b>　${i + 1}</b>
-        <p>　動作番号:
-          <a href="file:///Users/yuki-f/scratchsearch/splitted/${
-            json[i]['moveNum']
-          }.csv">${json[i]['moveNum']}
-          </a>
-        </p>
-        <p>　URL:  
-          <a href="https://scratch.mit.edu/projects/${
-            json[i]['prjId']
-          }/" target="_blank" rel="noopener noreferrer">
-              https://scratch.mit.edu/projects/${json[i]['prjId']}/
-          </a>
-        </p> 
-        <p>　スプライト: ${json[i]['sprite']}</p>
-        <p>　DTW距離: ${json[i]['dtw']}</p> 
-        </div>`;
+      searching.addClass('hidden');
+
+      // for (let i = 0; i < json.length; i++) {
+      for (let i = 0; i < 10; i++) {
+        addResult(
+          json[i]['moveNum'],
+          `https://scratch.mit.edu/projects/${json[i]['prjId']}/`,
+          json[i]['sprite'],
+          json[i]['dtw']
+        );
       }
-      resultEl.html(a);
     });
 }
+
+const resetResult = () => {
+  result.innerHTML = '';
+};
+
+const addResult = (actionID, url, sprite, dtw) => {
+  const element = `<div class="result"><iframe class="frame" src="${url}embed" allowtransparency="true" width="320" height="200" frameborder="0" scrolling="no" allowfullscreen></iframe><span>動作番号：${actionID}</span><span>URL：${url}</span><span>スプライト：${sprite}</span><span>DTW距離：${dtw}</span></div>`;
+  result.insertAdjacentHTML('beforeend', element);
+};
