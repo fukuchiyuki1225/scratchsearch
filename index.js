@@ -19,7 +19,7 @@ const beforesearch = $('#beforesearch');
 canvasDom.width = 482;
 canvasDom.height = 362;
 ctx.lineCap = 'round';
-ctx.strokeStyle = 'lightskyblue';
+ctx.strokeStyle = '#33373f';
 ctx.lineWidth = 20;
 
 const url = 'http://0.0.0.0:5000';
@@ -96,7 +96,7 @@ function getFunc(getUrl) {
       searching.addClass('hidden');
 
       // for (let i = 0; i < json.length; i++) {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 5; i++) {
         addResult(
           json[i]['moveNum'],
           `https://scratch.mit.edu/projects/${json[i]['prjId']}/`,
@@ -112,6 +112,6 @@ const resetResult = () => {
 };
 
 const addResult = (actionID, url, sprite, dtw) => {
-  const element = `<div class="result"><iframe class="frame" src="${url}embed" allowtransparency="true" width="320" height="200" frameborder="0" scrolling="no" allowfullscreen></iframe><span>動作番号：${actionID}</span><span>URL：${url}</span><span>スプライト：${sprite}</span><span>DTW距離：${dtw}</span></div>`;
+  const element = `<div class="result"><iframe class="frame" src="${url}embed" allowtransparency="true" width="320" height="200" frameborder="0" scrolling="no" allowfullscreen></iframe><span>動作番号：${actionID}</span><span>URL：<a href=${url} target="_blank" rel="noopener noreferrer">${url}</a></span><span>スプライト：${sprite}</span><span>DTW距離：${dtw}</span></div>`;
   result.insertAdjacentHTML('beforeend', element);
 };
