@@ -157,4 +157,4 @@ def get_min(m0, m1, m2, i, j):
             return i - 1, j - 1, m2
 
 loadDataset("/Users/yuki-f/scratchsearch/splitted")
-api.run(host="0.0.0.0", port=5000, debug=True)
+api.run(host="0.0.0.0", port=49513, debug=True)
